@@ -9,7 +9,7 @@ const StateIntro = () => {
   return (
     <div>
         {showCounter && <Counter/>}
-        <button onClick={()=>setShowCounter(!showCounter)}>Toggle Counter</button>
+        {/* <button onClick={()=>setShowCounter(!showCounter)}>Toggle Counter</button> */}
     </div>
   )
 }
