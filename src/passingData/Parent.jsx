@@ -1,19 +1,23 @@
 import {useState} from 'react'
+import ChildA from './ChildA';
+import ChildB from './ChildB';
 
 const Parent = () => {
 
-    const[count, setCount] = useState(0);
+    const[countParent, setCountParent] = useState(0);
 
-    function handleParentButtonClick() {
-        setCount(prevCount => prevCount + 1);
-        console.log("Parent Button Clicked");
+    
+    function handleChildButtonClick(){
+        setCountParent(prevCountParent => prevCountParent+1);
     }
 
   return (
     <div>
-        <p>Inside Parent : {count}</p>
-        <button onClick={handleParentButtonClick}>Parent Button</button>
-        <Child count={count} />
+        <p>Inside Parent : {countParent}</p>
+        <ChildA
+            count={countParent} 
+            handleChildButtonClick={handleChildButtonClick} />
+        <ChildB count={countParent} />
     </div>
   )
 }
