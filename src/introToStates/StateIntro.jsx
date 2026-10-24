@@ -1,10 +1,15 @@
 import React from 'react'
 import Counter from './Counter.jsx'
+import {useState} from 'react'
 
 const StateIntro = () => {
+
+    const [showCounter,setShowCounter] = useState(true);
+
   return (
     <div>
-        <Counter/>
+        {showCounter && <Counter/>}
+        <button onClick={()=>setShowCounter(!showCounter)}>Toggle Counter</button>
     </div>
   )
 }
