@@ -4,7 +4,7 @@ import Event1 from './eventHandling/Event1.jsx'
 import StateIntro from './introToStates/StateIntro.jsx'
 
 const App = () => {
-    return <StateIntro />;
+    return <Parent />;
 }
 
 export default App
