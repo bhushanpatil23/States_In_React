@@ -20,7 +20,8 @@ const TodoPage = () => {
     function handleFormSubmit(e){
         e.preventDefault();
         const todoText = e.target["todo"].value;
-        console.log(todoText);
+        //console.log(todoText);
+
 
         const newTodo = [...todos,{
             text : todoText,
@@ -28,9 +29,20 @@ const TodoPage = () => {
             completed: false
         }];
 
+        // if want to insert at particular index
+        // let insertAt = 2;
+        // if(insertAt > todos.length) insertAt = 0;
+        // const newTodos1 = [
+        //     ...todos.slice(0,insertAt),
+        //     {
+        //         text : todoText,
+        //         id: crypto.randomUUID(),
+        //         completed : false,
+        //     },
+        //     ...todos.slice(insertAt)
+        // ];
+
         setTodos(newTodo);
-
-
         e.target.reset();
     }
 
@@ -60,6 +72,52 @@ const TodoPage = () => {
         <h2>Nothing's Here, Add a Todo</h2>
     )
 
+    const completedTodos = todos.filter(item => item.completed).length;
+
+    function handleDeleteAll(){
+        setTodos([]);
+    }
+
+    const compareFunction = (a,b) => a.text.localeCompare(b.text);
+
+    function handleSortTodos(){
+       //todos.sort(); // This will not work as it's referencing to same previous todos
+       //setTodos(todos); //So it's not going to re-render the component
+
+       const newTodos = [...todos];
+       newTodos.sort(compareFunction);
+       setTodos(newTodos);
+    }
+
+    function handleTodoUpdate(id, todoText){
+         const newTodos = todos.map(item => {
+            if(item.id === id){
+                return {...item, text: todoText};
+            }
+            return item;
+         })
+         setTodos(newTodos);
+    }
+
+    function handleTodoMoveUp(index){
+        if(index == 0) return;
+        const newTodos = [...todos];
+        [newTodos[index], newTodos[index-1]] = [newTodos[index-1],newTodos[index]];
+        setTodos(newTodos);
+    }
+
+    function handleTodoMoveDown(index){
+        if(index == todos.length-1) return;
+        const newTodos = [...todos];
+        [newTodos[index], newTodos[index+1]] = [newTodos[index+1],newTodos[index]];
+        setTodos(newTodos);
+    }
+
+    const isTodoEmpty = todos.length == 0;
+    const isSortesTodos = todos.every((todo,index,arr) => {
+        return index == 0 || compareFunction(arr[index-1], todo) <= 0;
+    })
+
     return (
         // <div>
         //     <p>{person.name}</p>
@@ -79,12 +137,25 @@ const TodoPage = () => {
                 <button>submit</button>
             </form>
 
-            {todos.length > 0 ? (
+            {!isSortesTodos && <button onClick={handleSortTodos}>Sort Todos</button>}
+
+            { !isTodoEmpty && <button onClick={handleDeleteAll}>Delete All</button>}
+
+            { !isTodoEmpty &&
+                <p>{completedTodos} / {todos.length} Completed </p>
+            }
+
+            {!isTodoEmpty? (
             <div>
-                {todos.map( (item) =>(
+                {todos.map( (item, index) =>(
                     <TodoItem key={item.id} item={item} 
                     onTodoToggle={onTodoToggle}
-                    onTodoDelete={handleDeleteTodo}/>
+                    onTodoDelete={handleDeleteTodo}
+                    onTodoTextUpdate={handleTodoUpdate}
+                    onMoveUp={handleTodoMoveUp}
+                    onMoveDown={handleTodoMoveDown}
+                    index={index}
+                    todosCount={todos.length}/>
                 ))}
             </div>
             ) :(
